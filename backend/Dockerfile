@@ -1,18 +1,23 @@
 # Use the official Node.js image.
 FROM node:19.7.0
 
-# Create and change to the app directory.
+# Set the working directory inside the container.
 WORKDIR /usr/src/app
 
-# Install app dependencies.
-COPY package*.json ./
-RUN npm install
+# Copy package.json and yarn.lock
+COPY package.json yarn.lock ./
 
-# Copy app files.
+# Install dependencies using Yarn
+RUN yarn install
+
+# Copy the rest of your application files
 COPY . .
+
+# Set environment to production (can be overridden at runtime)
 ENV NODE_ENV=production
-# Expose the port the app runs on.
-RUN npx prisma generate
-EXPOSE 3000
-# Run the application.
-CMD [ "npm", "run","dev" ]
+
+# Expose the port your app runs on
+EXPOSE 4000
+
+# Run the application using Yarn
+CMD ["yarn", "start"]
